@@ -1,258 +1,280 @@
+/* Consegna:
+Riprendiamo il live coding visto in classe un pó di tempo fá sul carosello di immagini e rifacciamolo :gatto_che_urla:, questa volta usando gli oggetti.
+:boolean-hug: Potete prendere come riferimento il codice scritto insieme nel live, che troverete direttamente nella mia repository di github a questo link: [https://github.com/fabiopacifici/104_js/tree/main/live_slider]
 
+Modifichiamo il codice dell'esercizio per renderlo funzionante con un array di oggetti al posto di un array di stringhe.
 
-/* 
+Bonus 0:
+Non eramamo ancora a conoscenda di molti strumenti utili, come ad esempio le funzioni. É possibile fare refactoring del codice, pulendolo e creando quanche funzione che possa rendere tutto piú leggibile e pulito?
 
-Consegna:
-Dato un array contenente una lista di cinque immagini, creare un carosello come nello screenshot allegato.
+Bonus 1:
+Sperimentiamo attraverso l'uso delle timing functions anche una funzionalità di scorrimento al nostro carosello:
+al click di un bottone o già dall'inizio possiamo far partire, ad intervalli di tempo a piacere, lo scorrimento delle immagini disponibili nel carosello stesso.
 
-
-MILESTONE 1
-Per prima cosa, creiamo il markup statico: costruiamo il container e inseriamo un'immagine grande al centro: avremo così la struttura base e gli stili pronti per poterci poi concentrare solamente sull'aspetto logico.
-
-
-
-MILESTONE 2
-Adesso rimuoviamo tutto il markup statico e inseriamo tutte le immagini dinamicamente servendoci dell'array fornito e un semplice ciclo for che concatena un template literal. 
-
-Tutte le immagini saranno nascoste, tranne la prima, che avrà una classe specifica che la renderà visibile.
-Al termine di questa fase ci ritroveremo con lo stesso slider stilato nella milestone 1, ma costruito dinamicamente attraverso JavaScript.
-
-
-MILESTONE 3
-Al click dell'utente sulle frecce, il programma cambierà l’immagine attiva, che quindi verrà visualizzata al posto della precedente.
-
-
-BONUS 1:
-Aggiungere il ciclo infinito del carosello. Ovvero se è attiva la prima immagine e l'utente clicca la freccia per andare all’immagine precedente, dovrà comparire l’ultima immagine dell’array e viceversa.
-
-
-BONUS 2:
-Aggiungere la visualizzazione di tutte le thumbnails sulla destra dell’immagine grande attiva, come nello screenshot proposto. Tutte le miniature avranno un layer di opacità scura, tranne quella corrispondente all’immagine attiva, che invece avrà un bordo colorato. 
-Al click delle frecce, oltre al cambio di immagine attiva, gestire il cambio di miniatura attiva.
-
-Prima di partire a scrivere codice:
-Non lasciamoci spaventare dalla complessità apparente dell'esercizio, ma analizziamo prima, come abbiamo fatto sempre, cosa ci potrebbe aspettare. Abbiamo completato ormai da qualche giorno la sessione HTML e CSS, se non ci ricordiamo qualcosa andiamo pure a riguardare alcuni argomenti. Non dedichiamo però al ripasso più di una mezz'ora, così da non perdere di vista il focus dell'esercizio.
-
-Consigli del giorno:
-1. Costruiamo del carosello una versione statica contenente solamente un'immagine. Di questa versione statica al momento opportuno commenteremo (oscureremo) alcuni elementi per poterli riprodurre dinamicamente in js. Potremo quindi usarli come "template". 
-2. Scriviamo sempre prima per punti il nostro algoritmo in italiano per capire cosa vogliamo fare
-3. Al momento giusto (ihihhi starà a voi capire quale) rispondete a questa domanda: "Quanti cicli servono?"
-
-*/
-
-//MILESTONE 2
-//Adesso rimuoviamo tutto il markup statico e inseriamo tutte le immagini dinamicamente servendoci dell'array fornito e un semplice ciclo for che concatena un template literal. 
-
-
-//Tutte le immagini saranno nascoste, tranne la prima, che avrà una classe specifica che la renderà visibile.
-
-//Al termine di questa fase ci ritroveremo con lo stesso slider stilato nella milestone 1, ma costruito dinamicamente attraverso JavaScript.
-
-
-//<img class="active" src="./assets/img/01.webp" alt="">
-
-
+Bonus 2:
+E se volessi un bottone per invertire la "direzione" del carosello? */
 
 /* Define the slides list */
 /* const slides = [
-  './assets/img/01.webp', //0
-  './assets/img/02.webp', //1
-  './assets/img/03.webp', //etc
-  './assets/img/04.webp',
-  './assets/img/05.webp',
-]
- */
+    './assets/img/01.webp', //0
+    './assets/img/02.webp', //1
+    './assets/img/03.webp', //etc
+    './assets/img/04.webp',
+    './assets/img/05.webp',
+] */
 
 const slides = [
   {
-    image: './assets/img/01.webp'
+      path: './assets/img/01.webp',
+
   },
+
   {
-    image: './assets/img/02.webp'
+      path: './assets/img/02.webp',
+
   },
+
   {
-    image: './assets/img/03.webp'
+      path: './assets/img/03.webp',
+
   },
+
   {
-    image: './assets/img/04.webp'
+      path: './assets/img/04.webp',
+
   },
+
   {
-    image: './assets/img/05.webp'
-  },
+      path: './assets/img/05.webp',
+
+  }
+
 ]
-//console.log(slides);
 
 let activeSlide = 0;
 let direction = "";
 let looper;
 let sliderSpeed = 1500;
 
+//seleziono gli Elementi della DOM
+const stopCarousel = document.getElementById('stop');
+const backwardCarousel = document.getElementById('backward');
+const forwardCarousel = document.getElementById('forward');
+const sliderImagesEl = document.querySelector('.slider .images');
+const thumbsElement = document.querySelector('.thumbnails');
+const prevEl = document.querySelector('.prev');
+const nextEl = document.querySelector('.next');
 
-// select the dom elements
-const sliderImagesEl = document.querySelector('.slider .images')
-const prevEl = document.querySelector('.prev')
-const nextEl = document.querySelector('.next')
-const slidesImages = document.querySelectorAll('.slider .images > img')
-const stopCarousel = document.getElementById("stop");
-const backwardCarousel = document.getElementById("backward");
-const forwardCarousel = document.getElementById("forward");
+/* Print all images into the dom */
+//Utilizzo il for per ciclare le parole chiave
+for (const key in slides) {
+  //Le assegno ad una variabile
+  const slidePath = slides[key].path;
+  console.log(key, slidePath);
+  //Assegno ad una variabile il markup da generare
+  const slideMarkup = `<img class="${activeSlide == key ? 'active' : ''}" src="${slidePath}" alt="">`;
+  //console.log(slideMarkup + ' markup image');
 
-
-//console.log(sliderImagesEl);
-
-
-
-//Uso il ciclo for per organizzare tutte le varibile dell'array (uno per riga)
-for (let i = 0; i < slides.length; i++) {
-  const slidePath = slides[i];
-  //console.log(slidePath);
-  
-  
-  //Creo il markup da inserire nella DOM e grazie a for...in stampo a schermo la key nel markup
-  for (const key in slidePath.length) {
-    const slideImage = slidePath[key].image;
-    console.log(slideImage);
-  }
-  
-  const image = `./assets/img/${slidePath.image}`;
-  const slideMarkup = `<img class="${activeSlide === i ? 'active' : ''}"  src="${slidePath.image}" alt="">`;
-  
-  sliderImagesEl.insertAdjacentHTML('beforeend', slideMarkup)
-  //console.log(slideMarkup);
-  }
-  
+  sliderImagesEl.insertAdjacentHTML('beforeend', slideMarkup);
+};
 
 
+//Seleziono tutti i tag .slider .image
+const slidesImages = document.querySelectorAll('.slider .images > img');
+//console.log(slidesImages);
 
-/* 
+//Faccio la stessa cosa fatta con le immagini
+for (const key in slides) {
+  //Assegno ad una variabile la variale dell'obj
+  const thumbPath = slides[key].path;
+  console.log('thumbpath = chiave', key, 'valore', thumbPath);
 
-MILESTONE 3
-Al click dell'utente sulle frecce, il programma cambierà l’immagine attiva, che quindi verrà visualizzata al posto della precedente.
-
-*/
-
-
-
-
-
-/* 
-BONUS 1:
-Aggiungere il ciclo infinito del carosello. Ovvero se è attiva la prima immagine e l'utente clicca la freccia per andare all’immagine precedente, dovrà comparire l’ultima immagine dell’array e viceversa.
-
-*/
-
-/* 
-
-BONUS 2:
-Aggiungere la visualizzazione di tutte le thumbnails sulla destra dell’immagine grande attiva, 
-come nello screenshot proposto. Tutte le miniature avranno un layer di opacità scura, tranne quella corrispondente all’immagine attiva, che invece avrà un bordo colorato. 
-Al click delle frecce, oltre al cambio di immagine attiva, gestire il cambio di miniatura attiva.
-
-*/
-
-
-const thumbsElement = document.querySelector('.thumbnails')
-
-for (let i = 0; i < slides.length; i++) {
-  const thumbPath = slides[i].image;
-  const thumb = `./assets/img/${thumbPath}`;
-  const thumbMarkup = `<img class="thumb ${activeSlide === i ? 'active' : ''}" src="${thumbPath}" alt="">`
+  const thumbMarkup = `<img class="${activeSlide == key ? 'active' : ''}" src="${thumbPath}" alt="">`;
   //console.log(thumbMarkup);
 
-  thumbsElement.insertAdjacentHTML('beforeend', thumbMarkup)
+  //Inserisco in thumbsElement, prima della fine il markup del thump
+  thumbsElement.insertAdjacentHTML('beforeend', thumbMarkup);
+};
 
-}
+//Creo una funzione per controllare la direzione delle slide
+function sliderControl(direction) {
+
+  //Assegno una varibile le immagine che verrà visualizza per prima (active)(in questo caso tutte)
+  const currentSlide = slidesImages[activeSlide];
+  console.log("currentSlide = ", currentSlide);
+
+  //Tolgo la classe active alle immagini
+  currentSlide.classList.remove('active');
+
+  //Assegno il thumb della DOM ad una variabile
+  const currentThumb = document.querySelector('.thumbnails > img.active');
+  console.log("currentThumb = ", currentThumb);
+
+  //Tolgo la classe active al thumb
+  currentThumb.classList.remove('active');
+
+  //after we remove the acrive class from the images we increment the activeSlide value by 1    
+  if (direction == "next") {
+
+      ////Se activeSlide è identico per dati e valore a slideImage.lentgh meno 1, stai in posizione zero 
+      if (activeSlide === slidesImages.length - 1) {
+          activeSlide = 0;
+      //altrimenti incrementa di 1
+      } else {
+          activeSlide++;
+      }
+
+  } else if (direction == "prev") {
+
+      // increment the activeSlide of 1
+      if (activeSlide = slidesImages.length + 1) {
+
+        activeSlide = 0;
+
+      } else {
+
+          activeSlide--;
+
+      }
+
+  }
+
+  console.log("activeSlide =", activeSlide);
+
+  //Assegno le slide image ad una nuovo variabile dop essere diventata active dopo aver scelto in base alla codizione di if/else
+  const nextSlide = slidesImages[activeSlide];
+  console.log(nextSlide);
+
+  //Inserisco la classe active
+  nextSlide.classList.add('active');
+
+  //Assegno una nuova thumb
+  const nextThumb = document.querySelectorAll('.thumbnails img')[activeSlide];
+  console.log(nextThumb);
+
+  //Aggiungo la classe active alla varibile creata prima
+  nextThumb.classList.add('active');
+
+  console.log(activeSlide);
+
+};
+
+//Ivoco la funzione per fermare il carosello
+clearInterval(looper);
+
+//Al click next
+nextEl.addEventListener('click', () => { sliderControl('next') });
+
+//Al click prev
+prevEl.addEventListener('click', () => { sliderControl('prev') });
+
+
+//Funzione per far partire il carosello e pulire l'evento in avanti
+forwardCarousel.addEventListener("click", () => {
+
+  clearInterval(looper);
+
+  const direction = "next";
+
+  looper = setInterval(sliderControl, sliderSpeed, direction);
+});
+
+//Funzione per ferma il carosello
+stopCarousel.addEventListener("click", () => {
+
+  clearInterval(looper);
+
+});
+
+//Funzione per far partire il carosello e pulire l'evento in avanti
+backwardCarousel.addEventListener("click", () => {
+
+  clearInterval(looper);
+
+  direction = "prev";
+
+  looper = setInterval(sliderControl, sliderSpeed, direction);
+
+});
 
 
 
 
-
-// intercept click on the next icon 
+//Evento al click di next
 nextEl.addEventListener('click', function () {
   console.log('cliccato su next');
 
-  // select the current slide
+  //Assegno ad una varibile la slide selezionata
   const currentSlide = slidesImages[activeSlide]
   console.log(currentSlide);
-  // remove the active class from the current slide
+  //Rimuovo la classe active e fermo l'immagine
   currentSlide.classList.remove('active')
 
-  // select the active thumb
+  //Assegno ad una varibile la thumb selezionata
   const currentThumb = document.querySelector('.thumbnails > img.active')
   console.log(currentThumb);
-  // remove the active class from the active thumb
+  //Rimuovo la classe active e fermo il thumb
   currentThumb.classList.remove('active')
 
 
-  // activeSlide = 4
 
-  if (activeSlide === slidesImages.length - 1) {
-    activeSlide = 0
-    // activeSlide = 5
-  } else {
-    // increment the activeSlide of 1
-    activeSlide++
-  }
-
-
-  // select the next slide
-  const nextSlide = slidesImages[activeSlide]
+  //Seleziono la prossima slide
+  const nextSlide = slidesImages[activeSlide];
   console.log(nextSlide);
-  // add the active class to the next slide
-  nextSlide.classList.add('active')
+  
+  //Inserisco la classe active nel thumb cosi da poter vedere l'immagine selezionata
+  nextSlide.classList.add('active');
 
 
-  /* TODO */
-
-
-  // select the next thumb
-  const nextThumb = document.querySelectorAll('.thumb')[activeSlide]
+  //Seleziono la prossima thumb
+  const nextThumb = document.querySelectorAll('.thumb')[activeSlide];
   console.log(nextThumb);
-  // add to the next thumb the active class
+
+  //Inserisco la classe active dopo il click
   nextThumb.classList.add('active')
 
 })
 
-// intercept click on the prev icon
+//Slide precedente
 
 
 //Funzione che ferma il carosello
 clearInterval(looper);
 
-// intercept click on the next icon 
+//Funzione ad evento click next
 nextEl.addEventListener('click', () => { sliderControl("next") });
 
-//Ferma il carosello
+//Funzione ad evento ferma il carosello
 nextEl.addEventListener('click', () => { clearInterval(looper) });
 
-// intercept click on the prev icon
+//Funzione ad evento click prev
 prevEl.addEventListener('click', () => { sliderControl("prev") });
 
-//Ferma il carosello se attivo
+//Funzione ad evento ferma il carosello
 prevEl.addEventListener('click', () => { clearInterval(looper) });
 
 forwardCarousel.addEventListener("click", () => {
 
-    clearInterval(looper);
+  clearInterval(looper);
 
-    direction = "next";
-
-    looper = setInterval(sliderControl, sliderSpeed, direction);
+  direction = "next";
+  //Assegno a looper il setInterval e ho passato il controllo della direzione e la variabile velocità di esecuzione
+  looper = setInterval(sliderControl, sliderSpeed, direction);
 });
 
 stopCarousel.addEventListener("click", () => {
 
-    clearInterval(looper);
+  clearInterval(looper);
 
 });
 
 backwardCarousel.addEventListener("click", () => {
 
-    clearInterval(looper);
+  clearInterval(looper);
 
-    direction = "prev";
-
-    looper = setInterval(sliderControl, sliderSpeed, direction);
+  direction = "prev";
+  //Assegno a looper il setInterval e ho passato il controllo della direzione e la varibile velocità di esecuzione
+  looper = setInterval(sliderControl, sliderSpeed, direction);
 
 });
 
