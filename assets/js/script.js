@@ -86,16 +86,21 @@ let activeSlide = 0;
 let direction = "";
 let looper;
 let sliderSpeed = 1500;
-let activeSlide = 0;
+
 
 // select the dom elements
 const sliderImagesEl = document.querySelector('.slider .images')
 const prevEl = document.querySelector('.prev')
 const nextEl = document.querySelector('.next')
 const slidesImages = document.querySelectorAll('.slider .images > img')
+const stopCarousel = document.getElementById("stop");
+const backwardCarousel = document.getElementById("backward");
+const forwardCarousel = document.getElementById("forward");
 
 
 //console.log(sliderImagesEl);
+
+
 
 //Uso il ciclo for per organizzare tutte le varibile dell'array (uno per riga)
 for (let i = 0; i < slides.length; i++) {
@@ -205,7 +210,6 @@ nextEl.addEventListener('click', function () {
   console.log(nextThumb);
   // add to the next thumb the active class
   nextThumb.classList.add('active')
-
 
 })
 
