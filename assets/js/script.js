@@ -65,70 +65,58 @@ Consigli del giorno:
 
 const slides = [
   {
-   image: './assets/img/01.webp'
+    image: './assets/img/01.webp'
   },
   {
     image: './assets/img/02.webp'
-   },
-   {
+  },
+  {
     image: './assets/img/03.webp'
-   },
-   {
+  },
+  {
     image: './assets/img/04.webp'
-   },
-   {
+  },
+  {
     image: './assets/img/05.webp'
-   },
+  },
 ]
-console.log(slides);
+//console.log(slides);
 
-
+let activeSlide = 0;
+let direction = "";
+let looper;
+let sliderSpeed = 1500;
 let activeSlide = 0;
 
 // select the dom elements
-const sliderImagesEl = document.querySelector('.slider .image')
+const sliderImagesEl = document.querySelector('.slider .images')
 const prevEl = document.querySelector('.prev')
 const nextEl = document.querySelector('.next')
+const slidesImages = document.querySelectorAll('.slider .images > img')
 
 
 //console.log(sliderImagesEl);
 
-/* Print all images into the dom */
-// loop over the slides 
+//Uso il ciclo for per organizzare tutte le varibile dell'array (uno per riga)
 for (let i = 0; i < slides.length; i++) {
   const slidePath = slides[i];
-  console.log(slidePath);
+  //console.log(slidePath);
   
-  // for each slide we create the markup
-  //Creo il markup da inserire nella DOM
+  
+  //Creo il markup da inserire nella DOM e grazie a for...in stampo a schermo la key nel markup
+  for (const key in slidePath.length) {
+    const slideImage = slidePath[key].image;
+    console.log(slideImage);
+  }
+  
   const image = `./assets/img/${slidePath.image}`;
-
-  const slideMarkup = `
- 
-    <img src="${slideMarkup}" alt="">
-  `;
-
-  /* `<img class="${activeSlide === i ? 'active' : '' }" src="${slidePath}" alt="">` */
-  //console.log(slideMarkup);
-
+  const slideMarkup = `<img class="${activeSlide === i ? 'active' : ''}"  src="${slidePath.image}" alt="">`;
+  
   sliderImagesEl.insertAdjacentHTML('beforeend', slideMarkup)
+  //console.log(slideMarkup);
+  }
+  
 
-}
-
-
-/* 
-
-if(condition) {
-  // code to run
-} else {
-  // code to run
-}
-
-// terary operator
-
-condition ? 'code to run' : 'code to run'
-
-*/
 
 
 /* 
@@ -138,8 +126,7 @@ Al click dell'utente sulle frecce, il programma cambierà l’immagine attiva, c
 
 */
 
-const slidesImages = document.querySelectorAll('.slider .images > img')
-console.log(slidesImages);
+
 
 
 
@@ -162,12 +149,13 @@ Al click delle frecce, oltre al cambio di immagine attiva, gestire il cambio di 
 const thumbsElement = document.querySelector('.thumbnails')
 
 for (let i = 0; i < slides.length; i++) {
-  const thumbPath = slides[i];
+  const thumbPath = slides[i].image;
+  const thumb = `./assets/img/${thumbPath}`;
   const thumbMarkup = `<img class="thumb ${activeSlide === i ? 'active' : ''}" src="${thumbPath}" alt="">`
   //console.log(thumbMarkup);
 
   thumbsElement.insertAdjacentHTML('beforeend', thumbMarkup)
-  
+
 }
 
 
@@ -175,7 +163,7 @@ for (let i = 0; i < slides.length; i++) {
 
 
 // intercept click on the next icon 
-nextEl.addEventListener('click', function(){
+nextEl.addEventListener('click', function () {
   console.log('cliccato su next');
 
   // select the current slide
@@ -190,7 +178,7 @@ nextEl.addEventListener('click', function(){
   // remove the active class from the active thumb
   currentThumb.classList.remove('active')
 
-  
+
   // activeSlide = 4
 
   if (activeSlide === slidesImages.length - 1) {
@@ -224,32 +212,43 @@ nextEl.addEventListener('click', function(){
 // intercept click on the prev icon
 
 
-// activeSlide = 0
-prevEl.addEventListener('click', function () {
-  console.log('cliccato su prev');
+//Funzione che ferma il carosello
+clearInterval(looper);
 
+// intercept click on the next icon 
+nextEl.addEventListener('click', () => { sliderControl("next") });
 
-  // select the current slide
-  const currentSlide = slidesImages[activeSlide]
-  console.log(currentSlide);
-  // remove the active class from the current slide
-  currentSlide.classList.remove('active')
+//Ferma il carosello
+nextEl.addEventListener('click', () => { clearInterval(looper) });
 
-  if (activeSlide === 0) {
-    activeSlide = slidesImages.length - 1
-    // activeSlide = 5
-  } else {
-      // decrement the activeSlide of 1
-      activeSlide--
-  }
-  
-  
-  console.log(activeSlide);
+// intercept click on the prev icon
+prevEl.addEventListener('click', () => { sliderControl("prev") });
 
+//Ferma il carosello se attivo
+prevEl.addEventListener('click', () => { clearInterval(looper) });
 
-  // select the next slide
-  const nextSlide = slidesImages[activeSlide]
-  console.log(nextSlide);
-  // add the active class to the next slide
-  nextSlide.classList.add('active')
-})
+forwardCarousel.addEventListener("click", () => {
+
+    clearInterval(looper);
+
+    direction = "next";
+
+    looper = setInterval(sliderControl, sliderSpeed, direction);
+});
+
+stopCarousel.addEventListener("click", () => {
+
+    clearInterval(looper);
+
+});
+
+backwardCarousel.addEventListener("click", () => {
+
+    clearInterval(looper);
+
+    direction = "prev";
+
+    looper = setInterval(sliderControl, sliderSpeed, direction);
+
+});
+
