@@ -127,7 +127,7 @@ function sliderControl(direction) {
   } else if (direction == "prev") {
 
       // increment the activeSlide of 1
-      if (activeSlide = slidesImages.length + 1) {
+      if (activeSlide === slidesImages.length + 1) {
 
         activeSlide = 0;
 
@@ -141,7 +141,8 @@ function sliderControl(direction) {
 
   console.log("activeSlide =", activeSlide);
 
-  //Assegno le slide image ad una nuovo variabile dop essere diventata active dopo aver scelto in base alla codizione di if/else
+  //Assegno le slide image ad una nuova variabile dopo essere diventata active,
+  //dopo aver scelto in base alla codizione di if/else
   const nextSlide = slidesImages[activeSlide];
   console.log(nextSlide);
 
@@ -169,14 +170,17 @@ nextEl.addEventListener('click', () => { sliderControl('next') });
 prevEl.addEventListener('click', () => { sliderControl('prev') });
 
 
-//Funzione per far partire il carosello e pulire l'evento in avanti
+
+
+
+/* //Funzione per far partire il carosello e pulire l'evento in avanti
 forwardCarousel.addEventListener("click", () => {
 
   clearInterval(looper);
 
   const direction = "next";
 
-  looper = setInterval(sliderControl, sliderSpeed, direction);
+  looper = setInterval(sliderControl, 1000, direction);
 });
 
 //Funzione per ferma il carosello
@@ -197,7 +201,7 @@ backwardCarousel.addEventListener("click", () => {
 
 });
 
-
+ */
 
 
 //Evento al click di next
@@ -207,12 +211,14 @@ nextEl.addEventListener('click', function () {
   //Assegno ad una varibile la slide selezionata
   const currentSlide = slidesImages[activeSlide]
   console.log(currentSlide);
+
   //Rimuovo la classe active e fermo l'immagine
   currentSlide.classList.remove('active')
 
   //Assegno ad una varibile la thumb selezionata
-  const currentThumb = document.querySelector('.thumbnails > img.active')
+  const currentThumb = document.querySelectorAll('.thumbnails > img.active')
   console.log(currentThumb);
+
   //Rimuovo la classe active e fermo il thumb
   currentThumb.classList.remove('active')
 
@@ -235,6 +241,46 @@ nextEl.addEventListener('click', function () {
 
 })
 
+prevEl.addEventListener('click', function () {
+  console.log('cliccato su prev');
+
+  //Assegno ad una varibile la slide selezionata
+  const currentSlide = slidesImages[activeSlide]
+  console.log(currentSlide);
+
+  //Rimuovo la classe active e fermo l'immagine
+  currentSlide.classList.add('active')
+
+  //Assegno ad una varibile la thumb selezionata
+  const currentThumb = document.querySelectorAll('.thumbnails > img.active')
+  console.log(currentThumb);
+
+  //Rimuovo la classe active e fermo il thumb
+  currentThumb.classList.add('active')
+
+
+
+  //Seleziono la slide precedente
+  const prevSlide = slidesImages[activeSlide - 1];
+  console.log(prevSlide);
+  
+  //Inserisco la classe active nel thumb cosi da poter vedere l'immagine selezionata
+  prevSlide.classList.add('active');
+
+
+  //Seleziono la prossima thumb
+  const prevThumb = document.querySelectorAll('.thumb')[activeSlide];
+  console.log(prevThumb);
+
+  //Inserisco la classe active dopo il click
+  prevThumb.classList.add('active')
+
+})
+
+
+
+
+
 //Slide precedente
 
 
@@ -253,7 +299,13 @@ prevEl.addEventListener('click', () => { sliderControl("prev") });
 //Funzione ad evento ferma il carosello
 prevEl.addEventListener('click', () => { clearInterval(looper) });
 
-forwardCarousel.addEventListener("click", () => {
+
+
+
+
+
+
+/* forwardCarousel.addEventListener("click", () => {
 
   clearInterval(looper);
 
@@ -277,4 +329,4 @@ backwardCarousel.addEventListener("click", () => {
   looper = setInterval(sliderControl, sliderSpeed, direction);
 
 });
-
+ */
