@@ -220,7 +220,7 @@ nextEl.addEventListener('click', function () {
   console.log(currentThumb);
 
   //Rimuovo la classe active e fermo il thumb
-  currentThumb.classList.remove('active')
+  //currentThumb.classList.remove('active')
 
 
 
@@ -233,11 +233,11 @@ nextEl.addEventListener('click', function () {
 
 
   //Seleziono la prossima thumb
-  const nextThumb = document.querySelectorAll('.thumb')[activeSlide];
+  const nextThumb = document.querySelectorAll('.thumb');  //[activeSlide];
   console.log(nextThumb);
 
   //Inserisco la classe active dopo il click
-  nextThumb.classList.add('active')
+  //nextThumb.classList.add('active')
 
 })
 
@@ -248,28 +248,29 @@ prevEl.addEventListener('click', function () {
   const currentSlide = slidesImages[activeSlide]
   console.log(currentSlide);
 
+  //Seleziono la slide precedente
+  const prevSlide = slidesImages[activeSlide] ;
+  console.log(prevSlide);
+  
+  //Inserisco la classe active nel thumb cosi da poter vedere l'immagine selezionata
+  prevSlide.classList.add('active');
+
   //Rimuovo la classe active e fermo l'immagine
-  currentSlide.classList.add('active')
+  currentSlide.classList.remove('active')
 
   //Assegno ad una varibile la thumb selezionata
   const currentThumb = document.querySelectorAll('.thumbnails > img.active')
   console.log(currentThumb);
 
   //Rimuovo la classe active e fermo il thumb
-  currentThumb.classList.add('active')
+  //currentThumb.classList.add('active')
 
 
 
-  //Seleziono la slide precedente
-  const prevSlide = slidesImages[activeSlide - 1];
-  console.log(prevSlide);
-  
-  //Inserisco la classe active nel thumb cosi da poter vedere l'immagine selezionata
-  prevSlide.classList.add('active');
 
 
-  //Seleziono la prossima thumb
-  const prevThumb = document.querySelectorAll('.thumb')[activeSlide];
+  //Seleziono la precendente thumb
+  const prevThumb = document.querySelectorAll('.thumb');   //[activeSlide];
   console.log(prevThumb);
 
   //Inserisco la classe active dopo il click
@@ -291,13 +292,13 @@ clearInterval(looper);
 nextEl.addEventListener('click', () => { sliderControl("next") });
 
 //Funzione ad evento ferma il carosello
-nextEl.addEventListener('click', () => { clearInterval(looper) });
+//nextEl.addEventListener('click', () => { clearInterval(looper) });
 
 //Funzione ad evento click prev
 prevEl.addEventListener('click', () => { sliderControl("prev") });
 
 //Funzione ad evento ferma il carosello
-prevEl.addEventListener('click', () => { clearInterval(looper) });
+//prevEl.addEventListener('click', () => { clearInterval(looper) });
 
 
 
@@ -330,3 +331,16 @@ backwardCarousel.addEventListener("click", () => {
 
 });
  */
+
+/* var currentImage = 1;
+
+function showDiv(which) {
+  for(i = 0; i < 13; i++) {
+     document.getElementById("image"+i).style.display="none";
+  }
+  //in the next 2 lines, you make sure which isn't lower than 1, and isn't greater than the number of images
+  if(which < 1) which = 1;
+  if(which > 13) which = 13;
+  document.getElementById("image" + which).style.display = "block";
+  currentImage = which;
+}  */
