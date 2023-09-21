@@ -160,14 +160,14 @@ function sliderControl(direction) {
 
 };
 
-//Ivoco la funzione per fermare il carosello
+/* //Ivoco la funzione per fermare il carosello
 clearInterval(looper);
-
-//Al click next
+ */
+/* //Al click next
 nextEl.addEventListener('click', () => { sliderControl('next') });
 
 //Al click prev
-prevEl.addEventListener('click', () => { sliderControl('prev') });
+prevEl.addEventListener('click', () => { sliderControl('prev') }); */
 
 
 
