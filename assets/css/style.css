@@ -113,3 +113,9 @@ img
 	height: calc(100% / 5);
 	object-fit: cover;
 }
+
+.thumbnails > img {
+	width: 150px;
+	height: calc(100% / 5);
+	object-fit: cover;
+}

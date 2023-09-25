@@ -1,4 +1,5 @@
-/* Consegna:
+/*
+ Consegna:
 Riprendiamo il live coding visto in classe un pó di tempo fá sul carosello di immagini e rifacciamolo :gatto_che_urla:, questa volta usando gli oggetti.
 :boolean-hug: Potete prendere come riferimento il codice scritto insieme nel live, che troverete direttamente nella mia repository di github a questo link: [https://github.com/fabiopacifici/104_js/tree/main/live_slider]
 
@@ -23,324 +24,255 @@ E se volessi un bottone per invertire la "direzione" del carosello? */
     './assets/img/05.webp',
 ] */
 
-const slides = [
+let slides = [
   {
-      path: './assets/img/01.webp',
+    path: './assets/img/01.webp',
 
   },
 
   {
-      path: './assets/img/02.webp',
+    path: './assets/img/02.webp',
 
   },
 
   {
-      path: './assets/img/03.webp',
+    path: './assets/img/03.webp',
 
   },
 
   {
-      path: './assets/img/04.webp',
+    path: './assets/img/04.webp',
 
   },
 
   {
-      path: './assets/img/05.webp',
+    path: './assets/img/05.webp',
 
   }
 
 ]
 
 let activeSlide = 0;
-let direction = "";
-let looper;
-let sliderSpeed = 1500;
-
-//seleziono gli Elementi della DOM
-const stopCarousel = document.getElementById('stop');
-const backwardCarousel = document.getElementById('backward');
-const forwardCarousel = document.getElementById('forward');
-const sliderImagesEl = document.querySelector('.slider .images');
-const thumbsElement = document.querySelector('.thumbnails');
-const prevEl = document.querySelector('.prev');
-const nextEl = document.querySelector('.next');
-
-/* Print all images into the dom */
-//Utilizzo il for per ciclare le parole chiave
-for (const key in slides) {
-  //Le assegno ad una variabile
-  const slidePath = slides[key].path;
-  console.log(key, slidePath);
-  //Assegno ad una variabile il markup da generare
-  const slideMarkup = `<img class="${activeSlide == key ? 'active' : ''}" src="${slidePath}" alt="">`;
-  //console.log(slideMarkup + ' markup image');
-
-  sliderImagesEl.insertAdjacentHTML('beforeend', slideMarkup);
-};
+  
+  // select the dom elements
+  const sliderImagesEl = document.querySelector('.slider .images')
+  const prevEl = document.querySelector('.prev')
+  const nextEl = document.querySelector('.next')
+  const bottoneInversione = document.querySelector('button')
+  
+  
+  //console.log(sliderImagesEl);
+  
+  /* Print all images into the dom */
+  // loop over the slides 
 
 
-//Seleziono tutti i tag .slider .image
-const slidesImages = document.querySelectorAll('.slider .images > img');
-//console.log(slidesImages);
+console.log(slides);
 
-//Faccio la stessa cosa fatta con le immagini
-for (const key in slides) {
-  //Assegno ad una variabile la variale dell'obj
-  const thumbPath = slides[key].path;
-  console.log('thumbpath = chiave', key, 'valore', thumbPath);
+    
+  
 
-  const thumbMarkup = `<img class="${activeSlide == key ? 'active' : ''}" src="${thumbPath}" alt="">`;
-  //console.log(thumbMarkup);
 
-  //Inserisco in thumbsElement, prima della fine il markup del thump
-  thumbsElement.insertAdjacentHTML('beforeend', thumbMarkup);
-};
 
-//Creo una funzione per controllare la direzione delle slide
-function sliderControl(direction) {
-
-  //Assegno una varibile le immagine che verrà visualizza per prima (active)(in questo caso tutte)
-  const currentSlide = slidesImages[activeSlide];
-  console.log("currentSlide = ", currentSlide);
-
-  //Tolgo la classe active alle immagini
-  currentSlide.classList.remove('active');
-
-  //Assegno il thumb della DOM ad una variabile
-  const currentThumb = document.querySelector('.thumbnails > img.active');
-  console.log("currentThumb = ", currentThumb);
-
-  //Tolgo la classe active al thumb
-  currentThumb.classList.remove('active');
-
-  //after we remove the acrive class from the images we increment the activeSlide value by 1    
-  if (direction == "next") {
-
-      ////Se activeSlide è identico per dati e valore a slideImage.lentgh meno 1, stai in posizione zero 
-      if (activeSlide === slidesImages.length - 1) {
-          activeSlide = 0;
-      //altrimenti incrementa di 1
-      } else {
-          activeSlide++;
+  function loop(stampa) {
+    for (let i = 0; i < slides.length; i++) {
+        const slidePath = slides[i]; // single slide path
+        console.log(slidePath.path);
+        
+        // for each slide we create the markup
+        const slideMarkup = `<img class="${activeSlide === i ? 'active' : '' } src="${slidePath.path}" alt="">`;
+        console.log(slideMarkup);
+      
+        stampa.insertAdjacentHTML('beforeend', slideMarkup);
+      
       }
+      return stampa
+  }
 
-  } else if (direction == "prev") {
+  loop(sliderImagesEl);
 
+
+
+
+
+  
+  
+  /* 
+  
+  if(condition) {
+    // code to run
+  } else {
+    // code to run
+  }
+  
+  // terary operator
+  
+  condition ? 'code to run' : 'code to run'
+  
+  */
+  
+  
+  /* 
+  
+  MILESTONE 3
+  Al click dell'utente sulle frecce, il programma cambierà l’immagine attiva, che quindi verrà visualizzata al posto della precedente.
+  
+  */
+  
+  const slidesImages = document.querySelectorAll('.slider .images > img')
+  console.log(slidesImages);
+  
+  
+  
+  /* 
+  BONUS 1:
+  Aggiungere il loop infinito del carosello. Ovvero se è attiva la prima immagine e l'utente clicca la freccia per andare all’immagine precedente, dovrà comparire l’ultima immagine dell’array e viceversa.
+  
+  */
+  
+  /* 
+  
+  BONUS 2:
+  Aggiungere la visualizzazione di tutte le thumbnails sulla destra dell’immagine grande attiva, 
+  come nello screenshot proposto. Tutte le miniature avranno un layer di opacità scura, tranne quella corrispondente all’immagine attiva, che invece avrà un bordo colorato. 
+  Al click delle frecce, oltre al cambio di immagine attiva, gestire il cambio di miniatura attiva.
+  
+  */
+  
+  
+  const thumbsElement = document.querySelector('.thumbnails')
+
+
+  loop(thumbsElement)  
+
+  
+  // intercept click on the next icon 
+  nextEl.addEventListener('click', function(){
+    console.log('cliccato su next');
+  
+   removeActive()
+  
+    // select the active thumb
+    const currentThumb = document.querySelector('.thumbnails > img.active')
+    console.log(currentThumb);
+    // remove the active class from the active thumb
+    currentThumb.classList.remove('active')
+  
+    
+    // activeSlide = 4
+  
+    if (activeSlide === slidesImages.length - 1) {
+      activeSlide = 5
+      // activeSlide = 5
+    } else {
       // increment the activeSlide of 1
-      if (activeSlide === slidesImages.length + 1) {
+      activeSlide++
+    }
+  
+  
+    nextSlide()
 
-        activeSlide = 0;
+  
+  
+    /* TODO */
+  
+  
+    // select the next thumb
+    const nextThumb = document.querySelectorAll('.thumbnails > img')[activeSlide]
+    console.log(nextThumb);
+    // add to the next thumb the active class
+    nextThumb.classList.add('active')
+  
+  
+  })  
+  // intercept click on the prev icon
+  
+  
+  // activeSlide = 0
+  prevEl.addEventListener('click', function () {
+    console.log('cliccato su prev');
+  
+  
+   removeActive()
 
-      } else {
 
-          activeSlide--;
+  
+    if (activeSlide === 0) {
+      activeSlide = slidesImages.length - 1
+      // activeSlide = 5
+    } else {
+        // decrement the activeSlide of 1
+        activeSlide--
+    }
+    
+    
+    console.log(activeSlide);
+  
+  
+    nextSlide()
+  })
 
-      }
 
+  function nextSlide() {
+      // select the next slide
+      const nextSlide = slidesImages[activeSlide]
+      console.log(nextSlide);
+      // add the active class to the next slide
+      nextSlide.classList.add('active')
   }
 
-  console.log("activeSlide =", activeSlide);
 
-  //Assegno le slide image ad una nuova variabile dopo essere diventata active,
-  //dopo aver scelto in base alla codizione di if/else
-  const nextSlide = slidesImages[activeSlide];
-  console.log(nextSlide);
+  function removeActive() {
+    // select the current slide
+    const currentSlide = slidesImages[activeSlide]
+    console.log(currentSlide);
+    // remove the active class from the current slide
+    return currentSlide.classList.remove('active')
+}
 
-  //Inserisco la classe active
-  nextSlide.classList.add('active');
-
-  //Assegno una nuova thumb
-  const nextThumb = document.querySelectorAll('.thumbnails img')[activeSlide];
-  console.log(nextThumb);
-
-  //Aggiungo la classe active alla varibile creata prima
-  nextThumb.classList.add('active');
-
-  console.log(activeSlide);
-
-};
-
-/* //Ivoco la funzione per fermare il carosello
-clearInterval(looper);
- */
-/* //Al click next
-nextEl.addEventListener('click', () => { sliderControl('next') });
-
-//Al click prev
-prevEl.addEventListener('click', () => { sliderControl('prev') }); */
-
-
-
-
-
-/* //Funzione per far partire il carosello e pulire l'evento in avanti
-forwardCarousel.addEventListener("click", () => {
-
-  clearInterval(looper);
-
-  const direction = "next";
-
-  looper = setInterval(sliderControl, 1000, direction);
-});
-
-//Funzione per ferma il carosello
-stopCarousel.addEventListener("click", () => {
-
-  clearInterval(looper);
-
-});
-
-//Funzione per far partire il carosello e pulire l'evento in avanti
-backwardCarousel.addEventListener("click", () => {
-
-  clearInterval(looper);
-
-  direction = "prev";
-
-  looper = setInterval(sliderControl, sliderSpeed, direction);
-
-});
-
- */
-
-
-//Evento al click di next
-nextEl.addEventListener('click', function () {
-  console.log('cliccato su next');
-
-  //Assegno ad una varibile la slide selezionata
-  const currentSlide = slidesImages[activeSlide]
-  console.log(currentSlide);
-
-  //Rimuovo la classe active e fermo l'immagine
-  currentSlide.classList.remove('active')
-
-  //Assegno ad una varibile la thumb selezionata
-  const currentThumb = document.querySelectorAll('.thumbnails > img.active')
-  console.log(currentThumb);
-
-  //Rimuovo la classe active e fermo il thumb
-  //currentThumb.classList.remove('active')
-
-
-
-  //Seleziono la prossima slide
-  const nextSlide = slidesImages[activeSlide];
-  console.log(nextSlide);
+function nextSlideAndRemove() {
   
-  //Inserisco la classe active nel thumb cosi da poter vedere l'immagine selezionata
-  nextSlide.classList.add('active');
-
-
-  //Seleziono la prossima thumb
-  const nextThumb = document.querySelectorAll('.thumb');  //[activeSlide];
-  console.log(nextThumb);
-
-  //Inserisco la classe active dopo il click
-  //nextThumb.classList.add('active')
-
-})
-
-prevEl.addEventListener('click', function () {
-  console.log('cliccato su prev');
-
-  //Assegno ad una varibile la slide selezionata
-  const currentSlide = slidesImages[activeSlide]
-  console.log(currentSlide);
-
-  //Seleziono la slide precedente
-  const prevSlide = slidesImages[activeSlide] ;
-  console.log(prevSlide);
+  removeActive()
   
-  //Inserisco la classe active nel thumb cosi da poter vedere l'immagine selezionata
-  prevSlide.classList.add('active');
-
-  //Rimuovo la classe active e fermo l'immagine
-  currentSlide.classList.remove('active')
-
-  //Assegno ad una varibile la thumb selezionata
-  const currentThumb = document.querySelectorAll('.thumbnails > img.active')
+  // select the active thumb
+  const currentThumb = document.querySelector('.thumbnails > img.active')
   console.log(currentThumb);
+  // remove the active class from the active thumb
+  currentThumb.classList.remove('active')
 
-  //Rimuovo la classe active e fermo il thumb
-  //currentThumb.classList.add('active')
+  
+  // activeSlide = 4
 
-
-
-
-
-  //Seleziono la precendente thumb
-  const prevThumb = document.querySelectorAll('.thumb');   //[activeSlide];
-  console.log(prevThumb);
-
-  //Inserisco la classe active dopo il click
-  prevThumb.classList.add('active')
-
-})
-
-
-
-
-
-//Slide precedente
-
-
-//Funzione che ferma il carosello
-clearInterval(looper);
-
-//Funzione ad evento click next
-nextEl.addEventListener('click', () => { sliderControl("next") });
-
-//Funzione ad evento ferma il carosello
-//nextEl.addEventListener('click', () => { clearInterval(looper) });
-
-//Funzione ad evento click prev
-prevEl.addEventListener('click', () => { sliderControl("prev") });
-
-//Funzione ad evento ferma il carosello
-//prevEl.addEventListener('click', () => { clearInterval(looper) });
-
-
-
-
-
-
-
-/* forwardCarousel.addEventListener("click", () => {
-
-  clearInterval(looper);
-
-  direction = "next";
-  //Assegno a looper il setInterval e ho passato il controllo della direzione e la variabile velocità di esecuzione
-  looper = setInterval(sliderControl, sliderSpeed, direction);
-});
-
-stopCarousel.addEventListener("click", () => {
-
-  clearInterval(looper);
-
-});
-
-backwardCarousel.addEventListener("click", () => {
-
-  clearInterval(looper);
-
-  direction = "prev";
-  //Assegno a looper il setInterval e ho passato il controllo della direzione e la varibile velocità di esecuzione
-  looper = setInterval(sliderControl, sliderSpeed, direction);
-
-});
- */
-
-/* var currentImage = 1;
-
-function showDiv(which) {
-  for(i = 0; i < 13; i++) {
-     document.getElementById("image"+i).style.display="none";
+  if (activeSlide === slidesImages.length - 1) {
+    activeSlide = 0
+    // activeSlide = 5
+  } else {
+    // increment the activeSlide of 1
+    activeSlide++
   }
-  //in the next 2 lines, you make sure which isn't lower than 1, and isn't greater than the number of images
-  if(which < 1) which = 1;
-  if(which > 13) which = 13;
-  document.getElementById("image" + which).style.display = "block";
-  currentImage = which;
-}  */
+
+
+  nextSlide()
+
+
+
+  /* TODO */
+
+
+  // select the next thumb
+  const nextThumb = document.querySelectorAll('.thumbnails > img')[activeSlide]
+  console.log(nextThumb);
+  // add to the next thumb the active class
+  nextThumb.classList.add('active')
+
+
+}
+
+ setInterval(nextSlideAndRemove, 3000)
+
+
+ bottoneInversione.addEventListener('click', function () {
+
+
+
+ })
